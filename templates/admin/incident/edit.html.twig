@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier l'incident — {{ project.name }}{% endblock %}
+
+{% block body %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ path('app_dashboard') }}">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_project_show', {id: project.id}) }}">{{ project.name }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_incident_index', {projectId: project.id}) }}">Incidents</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Modifier</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-lg-7">
+            <div class="card p-4">
+                <h1 class="h4 mb-4">Modifier l'incident</h1>
+                {{ form_start(form) }}
+                    {{ form_row(form.title) }}
+                    {{ form_row(form.impact) }}
+                    {{ form_row(form.affectedServices) }}
+                    <button class="btn btn-success" type="submit">Enregistrer</button>
+                    <a href="{{ path('app_incident_show', {projectId: project.id, id: incident.id}) }}" class="btn btn-link">Annuler</a>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

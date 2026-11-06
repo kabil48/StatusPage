@@ -1,0 +1,19 @@
+{# Timeline d'un incident, de la plus récente à la plus ancienne mise à jour.
+   show_authors : afficher l'auteur (dashboard uniquement, jamais sur la page publique). #}
+{% import '_partials/_macros.html.twig' as ui %}
+<ul class="timeline">
+    {% for update in incident.updates %}
+        <li class="timeline-item {{ update.status.value == 'resolved' ? 'is-resolved' }}">
+            <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+                <span class="fw-semibold">{{ update.status.label }}</span>
+                <span class="small text-secondary">{{ update.createdAt|date('d/m/Y H:i') }}</span>
+                {% if show_authors|default(false) %}
+                    <span class="small text-secondary">
+                        · {{ update.systemGenerated ? 'Système' : (update.author ? update.author.displayName : 'Utilisateur supprimé') }}
+                    </span>
+                {% endif %}
+            </div>
+            <p class="timeline-message mb-0">{{ update.message }}</p>
+        </li>
+    {% endfor %}
+</ul>

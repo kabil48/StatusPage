@@ -16,7 +16,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  */
 final class HttpChecker
 {
-    public const USER_AGENT = 'StatusPageBot/1.0';
+    public const USER_AGENT = 'KabivoxBot/1.0';
     private const MAX_REDIRECTS = 3;
 
     public function __construct(

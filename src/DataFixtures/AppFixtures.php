@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\DataFixtures;
 
+use App\Entity\Incident;
 use App\Entity\MonitorCheck;
 use App\Entity\MonitoredService;
 use App\Enum\CheckInterval;
 use App\Enum\IncidentImpact;
 use App\Enum\IncidentStatus;
 use App\Enum\ServiceStatus;
-use App\Entity\Incident;
 use App\Factory\MonitoredServiceFactory;
 use App\Factory\ProjectFactory;
 use App\Factory\UserFactory;
@@ -18,17 +18,17 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
 /**
- * Données de démonstration : `php bin/console doctrine:fixtures:load`
+ * Données de démonstration : `php bin/console doctrine:fixtures:load`.
  *
- *  - demo@statuspage.dev / password123 (utilisateur)
- *  - admin@statuspage.dev / password123 (administrateur)
+ *  - demo@kabivox.dev / password123 (utilisateur)
+ *  - admin@kabivox.dev / password123 (administrateur)
  */
 final class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        UserFactory::new()->admin()->create(['email' => 'admin@statuspage.dev', 'displayName' => 'Admin']);
-        $demo = UserFactory::createOne(['email' => 'demo@statuspage.dev', 'displayName' => 'Démo']);
+        UserFactory::new()->admin()->create(['email' => 'admin@kabivox.dev', 'displayName' => 'Admin']);
+        $demo = UserFactory::createOne(['email' => 'demo@kabivox.dev', 'displayName' => 'Démo']);
 
         $project = ProjectFactory::createOne([
             'owner' => $demo,

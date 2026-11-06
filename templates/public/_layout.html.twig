@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{# Pages publiques : navigation minimale, aucune information sensible (URL masquées, RG-SEC-06) #}
+{% block navbar %}
+    <nav class="navbar bg-white border-bottom">
+        <div class="container" style="max-width: 860px">
+            <a class="navbar-brand fw-bold" href="{{ path('app_status_page', {slug: project.slug}) }}">{{ project.name }}</a>
+            <span class="small text-secondary">Page de statut</span>
+        </div>
+    </nav>
+{% endblock %}

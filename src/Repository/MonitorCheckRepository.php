@@ -8,7 +8,6 @@ use App\Entity\MonitorCheck;
 use App\Entity\MonitoredService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use SortDirection;
 
 /**
  * @extends ServiceEntityRepository<MonitorCheck>
@@ -26,7 +25,7 @@ class MonitorCheckRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('c')
             ->andWhere('c.service = :service')
             ->setParameter('service', $service)
-            ->orderBy('c.checkedAt', SortDirection::Descending)
+            ->orderBy('c.checkedAt', \SortDirection::Descending)
             ->setMaxResults($limit)
             ->getQuery()
             ->getResult();

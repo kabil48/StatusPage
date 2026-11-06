@@ -12,7 +12,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use SortDirection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
@@ -63,7 +62,7 @@ class Incident
 
     /** @var Collection<int, IncidentUpdate> */
     #[ORM\OneToMany(targetEntity: IncidentUpdate::class, mappedBy: 'incident', cascade: ['persist'], orphanRemoval: true)]
-    #[ORM\OrderBy(['createdAt' => SortDirection::Descending, 'id' => SortDirection::Descending])]
+    #[ORM\OrderBy(['createdAt' => \SortDirection::Descending, 'id' => \SortDirection::Descending])]
     private Collection $updates;
 
     public function __construct(

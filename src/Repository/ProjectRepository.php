@@ -8,7 +8,6 @@ use App\Entity\Project;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use SortDirection;
 
 /**
  * @extends ServiceEntityRepository<Project>
@@ -26,7 +25,7 @@ class ProjectRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('p')
             ->andWhere('p.owner = :owner')
             ->setParameter('owner', $owner)
-            ->orderBy('p.name', SortDirection::Ascending)
+            ->orderBy('p.name', \SortDirection::Ascending)
             ->getQuery()
             ->getResult();
     }

@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+{% import '_partials/_macros.html.twig' as ui %}
+
+{% block title %}{{ incident.title }} — {{ project.name }}{% endblock %}
+
+{% block body %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ path('app_dashboard') }}">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_project_show', {id: project.id}) }}">{{ project.name }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_incident_index', {projectId: project.id}) }}">Incidents</a></li>
+            <li class="breadcrumb-item active text-truncate" aria-current="page">{{ incident.title }}</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
+        <div>
+            <h1 class="h3 mb-2">{{ incident.title }}</h1>
+            <div class="d-flex flex-wrap align-items-center gap-2 small">
+                {{ ui.incident_status_badge(incident.status) }}
+                <span class="badge text-bg-{{ incident.impact.color }}">Impact {{ incident.impact.label|lower }}</span>
+                {% if incident.autoCreated %}<span class="badge text-bg-light border"><i class="bi bi-robot"></i> Ouvert automatiquement</span>{% endif %}
+                <span class="text-secondary">
+                    Début {{ incident.startedAt|date('d/m/Y H:i') }}
+                    {% if incident.resolvedAt %}· résolu le {{ incident.resolvedAt|date('d/m/Y H:i') }}{% endif %}
+                    · durée {{ ui.duration(incident.durationInSeconds) }}
+                </span>
+            </div>
+        </div>
+        {% if is_granted('PROJECT_EDIT', incident) %}
+            <div class="d-flex gap-2">
+                {% if incident.open %}
+                    <a href="{{ path('app_incident_edit', {projectId: project.id, id: incident.id}) }}" class="btn btn-outline-secondary"><i class="bi bi-pencil"></i> Modifier</a>
+                {% endif %}
+                <form method="post" action="{{ path('app_incident_delete', {projectId: project.id, id: incident.id}) }}"
+                      onsubmit="return confirm('Supprimer définitivement cet incident et sa timeline ?');">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete-incident-' ~ incident.id) }}">
+                    <button class="btn btn-outline-danger"><i class="bi bi-trash"></i></button>
+                </form>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            {% if update_form %}
+                <div class="card mb-4">
+                    <div class="card-header bg-white fw-semibold">Publier une mise à jour</div>
+                    <div class="card-body">
+                        {{ form_start(update_form) }}
+                            {{ form_row(update_form.status) }}
+                            {{ form_row(update_form.message) }}
+                            <button class="btn btn-primary" type="submit">Publier</button>
+                            <span class="small text-secondary ms-2">Choisir « Résolu » clôt l'incident : il ne pourra plus être modifié.</span>
+                        {{ form_end(update_form) }}
+                    </div>
+                </div>
+            {% elseif incident.resolved %}
+                <div class="alert alert-success"><i class="bi bi-lock"></i> Incident résolu : la timeline est figée.</div>
+            {% endif %}
+
+            <div class="card">
+                <div class="card-header bg-white fw-semibold">Historique</div>
+                <div class="card-body">
+                    {{ include('_partials/_incident_timeline.html.twig', {incident: incident, show_authors: true}) }}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header bg-white fw-semibold">Services affectés</div>
+                <ul class="list-group list-group-flush">
+                    {% for service in incident.affectedServices %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <a href="{{ path('app_service_show', {id: service.id}) }}" class="text-decoration-none">{{ service.name }}</a>
+                            {{ ui.service_status_badge(service.currentStatus) }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% if project.public %}
+                <a class="btn btn-link px-0 mt-2" target="_blank" rel="noopener"
+                   href="{{ path('app_status_incident', {slug: project.slug, id: incident.id}) }}">
+                    <i class="bi bi-box-arrow-up-right"></i> Voir sur la page publique
+                </a>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

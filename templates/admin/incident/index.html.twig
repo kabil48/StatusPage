@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+{% import '_partials/_macros.html.twig' as ui %}
+
+{% block title %}Incidents — {{ project.name }}{% endblock %}
+
+{% block body %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ path('app_dashboard') }}">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_project_show', {id: project.id}) }}">{{ project.name }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Incidents</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+        <h1 class="h3 mb-0">Incidents</h1>
+        {% if is_granted('PROJECT_EDIT', project) %}
+            <a href="{{ path('app_incident_new', {projectId: project.id}) }}" class="btn btn-danger"><i class="bi bi-exclamation-triangle"></i> Déclarer un incident</a>
+        {% endif %}
+    </div>
+
+    <div class="card">
+        {% if incidents|length == 0 %}
+            <div class="card-body text-center text-secondary py-5">Aucun incident pour ce projet.</div>
+        {% else %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Incident</th>
+                            <th>Statut</th>
+                            <th class="d-none d-md-table-cell">Impact</th>
+                            <th class="d-none d-md-table-cell">Début</th>
+                            <th class="d-none d-md-table-cell">Durée</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for incident in incidents %}
+                            <tr>
+                                <td>
+                                    <a href="{{ path('app_incident_show', {projectId: project.id, id: incident.id}) }}" class="fw-semibold text-decoration-none">{{ incident.title }}</a>
+                                    {% if incident.autoCreated %}<span class="badge text-bg-light border ms-1" title="Ouvert automatiquement par le monitoring"><i class="bi bi-robot"></i> Auto</span>{% endif %}
+                                </td>
+                                <td>{{ ui.incident_status_badge(incident.status) }}</td>
+                                <td class="d-none d-md-table-cell"><span class="badge text-bg-{{ incident.impact.color }}">{{ incident.impact.label }}</span></td>
+                                <td class="d-none d-md-table-cell small text-secondary">{{ incident.startedAt|date('d/m/Y H:i') }}</td>
+                                <td class="d-none d-md-table-cell small">{{ ui.duration(incident.durationInSeconds) }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    </div>
+
+    {{ ui.pagination('app_incident_index', {projectId: project.id}, page, pages) }}
+{% endblock %}

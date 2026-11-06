@@ -9,7 +9,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use SortDirection;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -53,12 +52,12 @@ class Project
 
     /** @var Collection<int, MonitoredService> */
     #[ORM\OneToMany(targetEntity: MonitoredService::class, mappedBy: 'project', orphanRemoval: true)]
-    #[ORM\OrderBy(['position' => SortDirection::Ascending, 'id' => SortDirection::Ascending])]
+    #[ORM\OrderBy(['position' => \SortDirection::Ascending, 'id' => \SortDirection::Ascending])]
     private Collection $services;
 
     /** @var Collection<int, Incident> */
     #[ORM\OneToMany(targetEntity: Incident::class, mappedBy: 'project', orphanRemoval: true)]
-    #[ORM\OrderBy(['startedAt' => SortDirection::Descending])]
+    #[ORM\OrderBy(['startedAt' => \SortDirection::Descending])]
     private Collection $incidents;
 
     public function __construct(User $owner, string $name, string $slug)

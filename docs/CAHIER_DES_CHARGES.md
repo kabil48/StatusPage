@@ -1,4 +1,4 @@
-# StatusPage — Cahier des charges technique (MVP)
+# Kabivox — Cahier des charges technique (MVP)
 
 > Version 1.0 — 05/11/2026
 > Stack : PHP 8.2+ · Symfony 7.4 LTS · Doctrine · PostgreSQL · Twig/Bootstrap · Messenger · Scheduler · PHPUnit · NelmioApiDoc (OpenAPI)
@@ -208,7 +208,7 @@ CREATE INDEX idx_update_incident ON incident_update(incident_id, created_at);
 | RG-CHECK-02 | Après chaque check : `last_checked_at = now`, `next_check_at = now + check_interval_seconds`. |
 | RG-CHECK-03 | Un check est **UP** si une réponse est reçue avant le timeout **et** `status_code == expected_status_code`. Sinon **DOWN** (mauvais code, timeout, DNS, TLS, connexion refusée). |
 | RG-CHECK-04 | `response_time_ms` = temps total de la requête. `error_message` est renseigné (tronqué à 255 car.) en cas d'échec. |
-| RG-CHECK-05 | Les redirections sont suivies (max 3). User-Agent identifiable : `StatusPageBot/1.0`. |
+| RG-CHECK-05 | Les redirections sont suivies (max 3). User-Agent identifiable : `KabivoxBot/1.0`. |
 | RG-CHECK-06 | **Sécurité SSRF** : les URL pointant vers des IP privées / loopback / link-local (`127.0.0.0/8`, `10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`, `169.254.0.0/16`, `::1`…) sont **refusées** à la validation **et** à l'exécution (`NoPrivateNetworkHttpClient`). Seuls `http` et `https` sont acceptés. |
 | RG-CHECK-07 | Un même service ne peut pas être vérifié deux fois en parallèle (verrou `symfony/lock` par service). |
 

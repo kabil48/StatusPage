@@ -10,7 +10,11 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Validator\ConstraintValidatorInterface;
 use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 
-/** U-14 */
+/**
+ * U-14.
+ *
+ * @extends ConstraintValidatorTestCase<PublicUrlValidator>
+ */
 final class PublicUrlValidatorTest extends ConstraintValidatorTestCase
 {
     protected function createValidator(): ConstraintValidatorInterface

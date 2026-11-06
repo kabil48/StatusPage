@@ -40,7 +40,7 @@ final class HttpCheckerTest extends TestCase
 
         self::assertSame('GET', $response->getRequestMethod());
         self::assertSame('https://example.com/health', $response->getRequestUrl());
-        self::assertContains('User-Agent: StatusPageBot/1.0', $response->getRequestOptions()['headers']);
+        self::assertContains('User-Agent: KabivoxBot/1.0', $response->getRequestOptions()['headers']);
     }
 
     /** U-02 */

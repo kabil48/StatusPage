@@ -9,7 +9,6 @@ use App\Entity\Project;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use SortDirection;
 
 /**
  * @extends ServiceEntityRepository<MonitoredService>
@@ -34,7 +33,7 @@ class MonitoredServiceRepository extends ServiceEntityRepository
             ->andWhere('s.isActive = true')
             ->andWhere('s.nextCheckAt IS NULL OR s.nextCheckAt <= :now')
             ->setParameter('now', $now)
-            ->orderBy('s.nextCheckAt', SortDirection::Ascending)
+            ->orderBy('s.nextCheckAt', \SortDirection::Ascending)
             ->setMaxResults($limit)
             ->getQuery()
             ->getSingleColumnResult();

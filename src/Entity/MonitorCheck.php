@@ -22,7 +22,7 @@ class MonitorCheck
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: Types::BIGINT)]
-    private ?string $id = null;
+    private int|string|null $id = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
@@ -60,7 +60,7 @@ class MonitorCheck
         $this->errorMessage = null === $errorMessage ? null : mb_substr($errorMessage, 0, self::ERROR_MAX_LENGTH);
     }
 
-    public function getId(): ?string
+    public function getId(): int|string|null
     {
         return $this->id;
     }

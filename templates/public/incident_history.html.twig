@@ -1,0 +1,30 @@
+{% extends 'public/_layout.html.twig' %}
+{% import '_partials/_macros.html.twig' as ui %}
+
+{% block title %}Historique des incidents — {{ project.name }}{% endblock %}
+
+{% block body %}
+    <div class="mx-auto" style="max-width: 820px">
+        <a href="{{ path('app_status_page', {slug: project.slug}) }}" class="small text-decoration-none"><i class="bi bi-arrow-left"></i> Statut actuel</a>
+        <h1 class="h4 mt-2 mb-4">Historique des incidents</h1>
+
+        {% for incident in incidents %}
+            <a href="{{ path('app_status_incident', {slug: project.slug, id: incident.id}) }}" class="card mb-2 text-decoration-none text-body">
+                <div class="card-body py-3 d-flex justify-content-between align-items-center gap-3">
+                    <div>
+                        <div class="fw-semibold">{{ incident.title }}</div>
+                        <div class="small text-secondary">
+                            {{ incident.startedAt|date('d/m/Y H:i') }}
+                            {% if incident.resolved %}· durée {{ ui.duration(incident.durationInSeconds) }}{% endif %}
+                        </div>
+                    </div>
+                    {{ ui.incident_status_badge(incident.status) }}
+                </div>
+            </a>
+        {% else %}
+            <p class="text-secondary">Aucun incident signalé.</p>
+        {% endfor %}
+
+        {{ ui.pagination('app_status_incidents', {slug: project.slug}, page, pages) }}
+    </div>
+{% endblock %}

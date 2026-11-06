@@ -1,0 +1,52 @@
+security:
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+
+    providers:
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
+
+    firewalls:
+        dev:
+            pattern: ^/(_profiler(/|$)|(_wdt|assets|build)/)
+            security: false
+        main:
+            lazy: true
+            provider: app_user_provider
+            user_checker: App\Security\UserChecker
+            form_login:
+                login_path: app_login
+                check_path: app_login
+                default_target_path: app_dashboard
+                enable_csrf: true
+                username_parameter: email
+                password_parameter: password
+            logout:
+                path: app_logout
+                target: app_home
+            # RG-SEC-04 : 5 tentatives par minute
+            login_throttling:
+                max_attempts: 5
+                interval: '1 minute'
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800
+
+    role_hierarchy:
+        ROLE_ADMIN: ROLE_USER
+
+    # Note : seule la première règle qui correspond est appliquée
+    access_control:
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/dashboard, roles: ROLE_USER }
+
+when@test:
+    security:
+        password_hashers:
+            Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
+                algorithm: auto
+                cost: 4
+                time_cost: 3
+                memory_cost: 10

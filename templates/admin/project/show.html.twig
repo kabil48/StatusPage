@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+{% import '_partials/_macros.html.twig' as ui %}
+
+{% block title %}{{ project.name }}{% endblock %}
+
+{% block body %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ path('app_dashboard') }}">Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ project.name }}</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
+        <div>
+            <h1 class="h3 mb-1">{{ project.name }}</h1>
+            {% if project.description %}<p class="text-secondary mb-0">{{ project.description }}</p>{% endif %}
+        </div>
+        <div class="d-flex gap-2">
+            {% if project.public %}
+                <a href="{{ path('app_status_page', {slug: project.slug}) }}" class="btn btn-outline-secondary" target="_blank" rel="noopener">
+                    <i class="bi bi-box-arrow-up-right"></i> Page publique
+                </a>
+            {% endif %}
+            <a href="{{ path('app_project_edit', {id: project.id}) }}" class="btn btn-outline-secondary"><i class="bi bi-gear"></i> Paramètres</a>
+        </div>
+    </div>
+
+    <div class="mb-4">{{ ui.global_status_banner(global_status) }}</div>
+
+    <div class="card">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+            <span class="fw-semibold">Services surveillés</span>
+            {% if can_add_service %}
+                <a href="{{ path('app_service_new', {id: project.id}) }}" class="btn btn-success btn-sm"><i class="bi bi-plus-lg"></i> Ajouter un service</a>
+            {% else %}
+                <span class="small text-secondary">Limite de services atteinte</span>
+            {% endif %}
+        </div>
+
+        {% if project.services is empty %}
+            <div class="card-body text-center text-secondary py-5">
+                Aucun service pour l'instant. Ajoutez l'URL d'un site ou d'une API à surveiller.
+            </div>
+        {% else %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Service</th>
+                            <th>Statut</th>
+                            <th class="d-none d-md-table-cell">Fréquence</th>
+                            <th class="d-none d-md-table-cell">Dernière vérification</th>
+                            <th class="text-end">Visibilité</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for service in project.services %}
+                            <tr>
+                                <td>
+                                    <a href="{{ path('app_service_show', {id: service.id}) }}" class="fw-semibold text-decoration-none">{{ service.name }}</a>
+                                    <div class="small text-secondary text-truncate" style="max-width: 320px">{{ service.httpMethod.value }} {{ service.url }}</div>
+                                </td>
+                                <td>{{ ui.service_status_badge(service.currentStatus) }}</td>
+                                <td class="d-none d-md-table-cell small">{{ service.checkInterval.label }}</td>
+                                <td class="d-none d-md-table-cell small text-secondary">
+                                    {{ service.lastCheckedAt ? service.lastCheckedAt|date('d/m/Y H:i') : 'Jamais' }}
+                                </td>
+                                <td class="text-end">
+                                    {% if service.public %}
+                                        <i class="bi bi-eye text-secondary" title="Public"></i>
+                                    {% else %}
+                                        <i class="bi bi-eye-slash text-secondary" title="Masqué"></i>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

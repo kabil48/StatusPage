@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion{% endblock %}
+
+{% block body %}
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <div class="card p-4">
+                <h1 class="h4 mb-4 text-center">Connexion</h1>
+
+                {% if error %}
+                    <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                {% endif %}
+
+                <form method="post" action="{{ path('app_login') }}">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Adresse email</label>
+                        <input type="email" value="{{ last_username }}" name="email" id="email" class="form-control" autocomplete="email" required autofocus>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Mot de passe</label>
+                        <input type="password" name="password" id="password" class="form-control" autocomplete="current-password" required>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input type="checkbox" name="_remember_me" id="remember_me" class="form-check-input">
+                        <label for="remember_me" class="form-check-label">Se souvenir de moi</label>
+                    </div>
+
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                    <button class="btn btn-success w-100" type="submit">Se connecter</button>
+                </form>
+
+                <p class="text-center text-secondary small mt-3 mb-0">
+                    Pas encore de compte&nbsp;? <a href="{{ path('app_register') }}">Inscription</a>
+                </p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

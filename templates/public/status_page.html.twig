@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+{% import '_partials/_macros.html.twig' as ui %}
+
+{% block title %}Statut — {{ project.name }}{% endblock %}
+
+{# Page publique : navigation minimale, aucune information sensible (URL masquées, RG-SEC-06) #}
+{% block navbar %}
+    <nav class="navbar bg-white border-bottom">
+        <div class="container" style="max-width: 860px">
+            <span class="navbar-brand fw-bold">{{ project.name }}</span>
+            <span class="small text-secondary">Page de statut</span>
+        </div>
+    </nav>
+{% endblock %}
+
+{% block body %}
+    <div class="mx-auto" style="max-width: 820px">
+        <div class="mb-4">{{ ui.global_status_banner(global_status) }}</div>
+
+        {% if open_incidents is not empty %}
+            <h2 class="h5 mb-3">Incidents en cours</h2>
+            {% for incident in open_incidents %}
+                <div class="card mb-3 border-{{ incident.impact.color }}">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <h3 class="h6 mb-1">{{ incident.title }}</h3>
+                            <span class="badge text-bg-{{ incident.impact.color }}">{{ incident.impact.label }}</span>
+                        </div>
+                        <div class="small text-secondary mb-2">{{ incident.status.label }} · depuis le {{ incident.startedAt|date('d/m/Y H:i') }}</div>
+                        {% set last_update = incident.updates|first %}
+                        {% if last_update %}<p class="mb-0">{{ last_update.message }}</p>{% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="card mb-4">
+            <ul class="list-group list-group-flush">
+                {% for service in services %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                        <span class="fw-semibold">{{ service.name }}</span>
+                        <span class="d-flex align-items-center gap-2 small text-{{ service.currentStatus.color }}">
+                            {{ ui.status_dot(service.currentStatus.color) }} {{ service.currentStatus.label }}
+                        </span>
+                    </li>
+                {% else %}
+                    <li class="list-group-item text-center text-secondary py-4">Aucun service publié.</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <h2 class="h5 mb-3">Incidents des 14 derniers jours</h2>
+        {% for incident in recent_incidents %}
+            <div class="card mb-2">
+                <div class="card-body py-3">
+                    <div class="fw-semibold">{{ incident.title }}</div>
+                    <div class="small text-secondary">
+                        Résolu le {{ incident.resolvedAt|date('d/m/Y H:i') }} · durée {{ ui.duration(incident.durationInSeconds) }}
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <p class="text-secondary">Aucun incident signalé.</p>
+        {% endfor %}
+    </div>
+{% endblock %}

@@ -1,0 +1,44 @@
+# yaml-language-server: $schema=../vendor/symfony/dependency-injection/Loader/schema/services.schema.json
+
+parameters:
+    # Limites anti-abus (cahier des charges §4.7)
+    app.max_projects_per_user: 5
+    app.max_services_per_project: 20
+    app.check_retention_days: 90
+    app.recovery_threshold: 2
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        bind:
+            int $maxProjectsPerUser: '%app.max_projects_per_user%'
+            int $maxServicesPerProject: '%app.max_services_per_project%'
+
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/Entity/'
+            - '../src/Enum/'
+            - '../src/Exception/'
+            - '../src/Factory/'
+            - '../src/DataFixtures/'
+            - '../src/Kernel.php'
+
+    # RG-CHECK-06 : client HTTP du monitoring, refuse toute IP privée / loopback à l'exécution (anti-SSRF)
+    monitoring.http_client:
+        class: Symfony\Component\HttpClient\NoPrivateNetworkHttpClient
+        arguments: ['@http_client']
+
+# Factories Foundry et fixtures : dépendances de développement uniquement (absentes en production)
+when@dev: &dev_services
+    services:
+        _defaults:
+            autowire: true
+            autoconfigure: true
+        App\Factory\:
+            resource: '../src/Factory/'
+        App\DataFixtures\:
+            resource: '../src/DataFixtures/'
+
+when@test: *dev_services

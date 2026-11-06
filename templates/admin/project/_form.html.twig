@@ -1,0 +1,15 @@
+{{ form_start(form) }}
+    {{ form_row(form.name) }}
+    <div class="mb-3">
+        {{ form_label(form.slug) }}
+        <div class="input-group">
+            <span class="input-group-text">/status/</span>
+            {{ form_widget(form.slug) }}
+        </div>
+        {{ form_help(form.slug) }}
+        {{ form_errors(form.slug) }}
+    </div>
+    {{ form_row(form.description) }}
+    {{ form_row(form.isPublic) }}
+    <button class="btn btn-success" type="submit">{{ button_label }}</button>
+{{ form_end(form) }}

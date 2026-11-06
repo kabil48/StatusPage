@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau service{% endblock %}
+
+{% block body %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ path('app_dashboard') }}">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_project_show', {id: project.id}) }}">{{ project.name }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Nouveau service</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card p-4">
+                <h1 class="h4 mb-4">Surveiller un nouveau service</h1>
+                {{ include('admin/service/_form.html.twig', {button_label: 'Ajouter le service'}) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,36 @@
+{# Badge de statut d'un service (enum ServiceStatus) #}
+{% macro service_status_badge(status) %}
+    <span class="badge rounded-pill text-bg-{{ status.color }}">{{ status.label }}</span>
+{% endmacro %}
+
+{# Pastille de couleur #}
+{% macro status_dot(color) %}
+    <span class="status-dot bg-{{ color }}"></span>
+{% endmacro %}
+
+{# Bannière de statut global (enum GlobalStatus) #}
+{% macro global_status_banner(status) %}
+    <div class="status-banner text-bg-{{ status.color }} d-flex align-items-center gap-2">
+        {% if status.value == 'operational' %}
+            <i class="bi bi-check-circle-fill"></i>
+        {% elseif status.value == 'no_data' %}
+            <i class="bi bi-hourglass-split"></i>
+        {% else %}
+            <i class="bi bi-exclamation-triangle-fill"></i>
+        {% endif %}
+        {{ status.label }}
+    </div>
+{% endmacro %}
+
+{# Durée lisible à partir d'un nombre de secondes #}
+{% macro duration(seconds) %}
+    {%- if seconds < 60 -%}
+        {{ seconds }} s
+    {%- elseif seconds < 3600 -%}
+        {{ (seconds / 60)|round(0, 'floor') }} min
+    {%- elseif seconds < 86400 -%}
+        {{ (seconds / 3600)|round(0, 'floor') }} h {{ ((seconds % 3600) / 60)|round(0, 'floor') }} min
+    {%- else -%}
+        {{ (seconds / 86400)|round(0, 'floor') }} j {{ ((seconds % 86400) / 3600)|round(0, 'floor') }} h
+    {%- endif -%}
+{% endmacro %}

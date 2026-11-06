@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier {{ service.name }}{% endblock %}
+
+{% block body %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ path('app_dashboard') }}">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_project_show', {id: project.id}) }}">{{ project.name }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_service_show', {id: service.id}) }}">{{ service.name }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Modifier</li>
+        </ol>
+    </nav>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card p-4">
+                <h1 class="h4 mb-4">Modifier le service</h1>
+                {{ include('admin/service/_form.html.twig', {button_label: 'Enregistrer'}) }}
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card p-4 border-danger">
+                <h2 class="h6 text-danger">Zone de danger</h2>
+                <p class="small text-secondary">Supprime le service et tout son historique de vérifications.</p>
+                <form method="post" action="{{ path('app_service_delete', {id: service.id}) }}" onsubmit="return confirm('Supprimer définitivement ce service ?');">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete-service-' ~ service.id) }}">
+                    <button class="btn btn-outline-danger btn-sm"><i class="bi bi-trash"></i> Supprimer le service</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

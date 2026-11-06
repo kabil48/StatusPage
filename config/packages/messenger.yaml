@@ -1,0 +1,24 @@
+framework:
+    messenger:
+        failure_transport: failed
+
+        transports:
+            # Checks HTTP exécutés en arrière-plan par le worker : `messenger:consume async scheduler_monitoring`
+            async:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                options:
+                    queue_name: monitoring
+                retry_strategy:
+                    max_retries: 2
+                    delay: 5000
+            failed: 'doctrine://default?queue_name=failed'
+            sync: 'sync://'
+
+        routing:
+            'App\Message\CheckServiceMessage': async
+
+when@test:
+    framework:
+        messenger:
+            transports:
+                async: 'sync://'

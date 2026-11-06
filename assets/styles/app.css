@@ -1,0 +1,50 @@
+:root {
+    --sp-orange: #fd7e14;
+}
+
+body {
+    background-color: #f6f8fa;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+/* Couleur "orange" (panne partielle / impact majeur) absente de Bootstrap */
+.text-bg-orange { color: #fff !important; background-color: var(--sp-orange) !important; }
+.bg-orange { background-color: var(--sp-orange) !important; }
+.border-orange { border-color: var(--sp-orange) !important; }
+.text-orange { color: var(--sp-orange) !important; }
+
+.status-dot {
+    display: inline-block;
+    width: .75rem;
+    height: .75rem;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.status-banner {
+    border-radius: .75rem;
+    padding: 1.25rem 1.5rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.card {
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .04);
+}
+
+.stat-tile .value {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.hero {
+    padding: 5rem 0 4rem;
+}

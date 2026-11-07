@@ -16,15 +16,17 @@
             {{ include('_partials/_navbar.html.twig') }}
         {% endblock %}
 
-        <main class="py-4">
-            <div class="container">
-                {{ include('_partials/_flashes.html.twig') }}
-                {% block body %}{% endblock %}
-            </div>
-        </main>
+        {% block main %}
+            <main class="py-4">
+                <div class="container">
+                    {{ include('_partials/_flashes.html.twig') }}
+                    {% block body %}{% endblock %}
+                </div>
+            </main>
+        {% endblock %}
 
-        <footer class="py-4 text-center text-secondary small border-top bg-white">
-            Kabivox · Projet portfolio Symfony
-        </footer>
+        {% block footer %}
+            {{ include('_partials/_footer.html.twig') }}
+        {% endblock %}
     </body>
 </html>

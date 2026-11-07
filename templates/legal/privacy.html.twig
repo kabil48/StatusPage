@@ -1,0 +1,56 @@
+{% extends 'legal/_layout.html.twig' %}
+
+{% block title %}Politique de confidentialité{% endblock %}
+
+{% block legal_content %}
+    <h2>Responsable du traitement</h2>
+    <p>
+        <span class="todo">[Nom ou raison sociale de l'éditeur]</span>, joignable à
+        <span class="todo">[adresse de contact]</span>.
+    </p>
+
+    <h2>Données collectées</h2>
+    <ul>
+        <li><strong>Compte :</strong> adresse e-mail, nom affiché, mot de passe (stocké uniquement sous forme chiffrée), date d'inscription.</li>
+        <li><strong>Jeton d'API :</strong> seule une empreinte du jeton est conservée, jamais le jeton lui-même.</li>
+        <li><strong>Configuration :</strong> projets, services surveillés (nom et URL) et incidents que vous créez.</li>
+        <li><strong>Vérifications :</strong> code HTTP, temps de réponse et erreur éventuelle de chaque vérification.</li>
+    </ul>
+    <p>
+        Les visiteurs d'une page de statut publique n'ont pas besoin de compte.
+        Aucun outil de mesure d'audience ni aucune publicité n'est utilisé sur Kabivox.
+    </p>
+
+    <h2>Finalités et base légale</h2>
+    <p>
+        Ces données servent uniquement à fournir le service : authentification, surveillance de vos services,
+        publication de vos pages de statut et sécurité du compte. La base légale est l'exécution du contrat
+        (les <a href="{{ path('app_legal_terms') }}">conditions d'utilisation</a>).
+    </p>
+
+    <h2>Durée de conservation</h2>
+    <ul>
+        <li>Résultats de vérification : 90 jours, puis suppression automatique.</li>
+        <li>Compte, projets et incidents : tant que le compte existe. Ils sont supprimés avec le compte.</li>
+    </ul>
+
+    <h2>Cookies</h2>
+    <p>
+        Kabivox utilise uniquement des cookies nécessaires au fonctionnement du service : un cookie de session
+        (connexion et protection des formulaires) et, si vous cochez « Se souvenir de moi », un cookie de connexion valable 7 jours.
+        Ces cookies sont strictement nécessaires et ne demandent donc pas de consentement.
+    </p>
+
+    <h2>Hébergement et destinataires</h2>
+    <p>
+        Les données sont hébergées par <span class="todo">[hébergeur]</span>, en <span class="todo">[pays]</span>.
+        Elles ne sont ni vendues ni transmises à des tiers.
+    </p>
+
+    <h2>Vos droits</h2>
+    <p>
+        Vous pouvez accéder à vos données, les rectifier, les supprimer, en demander la portabilité ou vous opposer
+        à leur traitement en écrivant à <span class="todo">[adresse de contact]</span>.
+        Vous pouvez aussi adresser une réclamation à la CNIL (<a href="https://www.cnil.fr" rel="noopener">cnil.fr</a>).
+    </p>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'legal/_layout.html.twig' %}
+
+{% block title %}Mentions légales{% endblock %}
+
+{% block legal_content %}
+    <h2>Éditeur du site</h2>
+    <p>
+        <span class="todo">[Nom et prénom, ou raison sociale]</span><br>
+        Statut : <span class="todo">[entrepreneur individuel / micro-entreprise / SAS…]</span><br>
+        SIREN : <span class="todo">[numéro]</span><br>
+        Adresse : <span class="todo">[adresse postale]</span><br>
+        E-mail : <span class="todo">[adresse de contact]</span>
+    </p>
+
+    <h2>Directeur de la publication</h2>
+    <p><span class="todo">[Nom et prénom]</span></p>
+
+    <h2>Hébergement</h2>
+    <p>
+        <span class="todo">[Nom de l'hébergeur]</span><br>
+        <span class="todo">[Adresse et téléphone de l'hébergeur]</span>
+    </p>
+
+    <h2>Propriété intellectuelle</h2>
+    <p>
+        Le nom Kabivox, le site et son contenu sont la propriété de l'éditeur. Toute reproduction sans autorisation
+        est interdite. Les contenus publiés par les utilisateurs sur leurs pages de statut restent leur propriété.
+    </p>
+
+    <h2>Données personnelles</h2>
+    <p>
+        Le traitement de vos données est décrit dans la
+        <a href="{{ path('app_legal_privacy') }}">politique de confidentialité</a>.
+    </p>
+{% endblock %}

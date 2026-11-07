@@ -1,0 +1,56 @@
+{% extends 'legal/_layout.html.twig' %}
+
+{% block title %}Conditions d'utilisation{% endblock %}
+
+{% block legal_content %}
+    <h2>1. Objet</h2>
+    <p>
+        Les présentes conditions encadrent l'utilisation de Kabivox, un service en ligne qui vérifie la disponibilité
+        de sites et d'API, gère des incidents et publie des pages de statut. Créer un compte vaut acceptation de ces conditions.
+    </p>
+
+    <h2>2. Bêta gratuite</h2>
+    <p>
+        Kabivox est actuellement proposé gratuitement, en version bêta. Les fonctionnalités et les limites
+        (nombre de pages de statut et de services) peuvent évoluer. Aucune somme ne vous sera facturée sans votre accord préalable.
+        Les utilisateurs seront prévenus avant le lancement des offres payantes.
+    </p>
+
+    <h2>3. Compte</h2>
+    <p>
+        Vous êtes responsable de la confidentialité de votre mot de passe et de votre jeton d'API,
+        ainsi que de l'exactitude des informations fournies.
+    </p>
+
+    <h2>4. Utilisation autorisée</h2>
+    <p>Vous vous engagez à :</p>
+    <ul>
+        <li>ne surveiller que des services que vous exploitez ou que vous êtes autorisé à surveiller ;</li>
+        <li>ne pas utiliser Kabivox pour surcharger un service tiers ou contourner ses protections ;</li>
+        <li>ne publier sur vos pages de statut aucun contenu illicite, trompeur ou portant atteinte aux droits d'autrui.</li>
+    </ul>
+    <p>L'éditeur peut suspendre un compte qui ne respecte pas ces règles.</p>
+
+    <h2>5. Disponibilité et responsabilité</h2>
+    <p>
+        L'éditeur fait ses meilleurs efforts pour assurer le bon fonctionnement de Kabivox, sans garantie de disponibilité
+        pendant la bêta. Les vérifications peuvent ne pas détecter toutes les pannes, ou en signaler à tort.
+        Kabivox est un outil d'information : il ne remplace pas votre propre supervision.
+        <span class="todo">[Faire relire cette clause de limitation de responsabilité par un professionnel avant les offres payantes.]</span>
+    </p>
+
+    <h2>6. Données</h2>
+    <p>
+        Les résultats de vérification sont conservés 90 jours. Le traitement des données personnelles est décrit dans la
+        <a href="{{ path('app_legal_privacy') }}">politique de confidentialité</a>.
+    </p>
+
+    <h2>7. Résiliation</h2>
+    <p>
+        Vous pouvez arrêter d'utiliser Kabivox à tout moment et demander la suppression de votre compte en écrivant à
+        <span class="todo">[adresse de contact]</span>. La suppression d'un compte supprime ses projets, services, vérifications et incidents.
+    </p>
+
+    <h2>8. Droit applicable</h2>
+    <p>Ces conditions sont soumises au droit français.</p>
+{% endblock %}

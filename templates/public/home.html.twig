@@ -2,37 +2,359 @@
 
 {% block title %}Surveillez vos services{% endblock %}
 
-{% block body %}
-    <section class="hero text-center">
-        <h1 class="display-5 fw-bold mb-3">Vos services sont-ils en ligne&nbsp;?</h1>
-        <p class="lead text-secondary mb-4 mx-auto" style="max-width: 640px">
-            Kabivox vérifie automatiquement vos sites et API, détecte les pannes,
-            ouvre les incidents et publie une page de statut pour vos utilisateurs.
-        </p>
-        <div class="d-flex justify-content-center gap-2">
-            {% if app.user %}
-                <a href="{{ path('app_dashboard') }}" class="btn btn-success btn-lg">Accéder au dashboard</a>
-            {% else %}
-                <a href="{{ path('app_register') }}" class="btn btn-success btn-lg">Commencer gratuitement</a>
-                <a href="{{ path('app_login') }}" class="btn btn-outline-secondary btn-lg">Se connecter</a>
-            {% endif %}
+{% block main %}
+<main class="landing">
+
+    {# ───────────── Hero ───────────── #}
+    <section class="landing-hero">
+        <div class="container">
+            {{ include('_partials/_flashes.html.twig') }}
+            <div class="row align-items-center g-5">
+                <div class="col-lg-6">
+                    <span class="badge rounded-pill text-bg-light border mb-3">
+                        <span class="status-dot bg-success me-1 align-middle pulse"></span>
+                        Monitoring · Incidents · Page de statut
+                    </span>
+                    <h1 class="display-4 fw-bold lh-1 mb-4">
+                        Sachez quand ça casse.<br>
+                        <span class="text-success">Prévenez avant qu'on vous le demande.</span>
+                    </h1>
+                    <p class="lead text-secondary mb-4">
+                        La page de statut en français pour les PME et les agences web.
+                        Kabivox vérifie vos sites et API en continu, détecte les pannes sans faux positifs,
+                        ouvre les incidents à votre place et tient vos clients informés.
+                    </p>
+                    <div class="d-flex flex-wrap gap-2">
+                        {% if app.user %}
+                            <a href="{{ path('app_dashboard') }}" class="btn btn-success btn-lg">Accéder au dashboard</a>
+                        {% else %}
+                            <a href="{{ path('app_register') }}" class="btn btn-success btn-lg">Créer un compte gratuit</a>
+                        {% endif %}
+                        {% if demo_slug %}
+                            <a href="{{ path('app_status_page', {slug: demo_slug}) }}" class="btn btn-outline-dark btn-lg">
+                                Voir une page de démo <i class="bi bi-arrow-right"></i>
+                            </a>
+                        {% else %}
+                            <a href="#fonctionnement" class="btn btn-outline-dark btn-lg">Comment ça marche</a>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {# Aperçu illustratif d'une page de statut #}
+                <div class="col-lg-6">
+                    <div class="preview-window shadow-lg" aria-hidden="true">
+                        <div class="preview-chrome">
+                            <span></span><span></span><span></span>
+                            <div class="preview-url">status.votre-entreprise.com</div>
+                        </div>
+                        <div class="p-4">
+                            <div class="status-banner text-bg-warning mb-3 fs-6">
+                                <i class="bi bi-exclamation-triangle-fill"></i> Perturbation partielle
+                            </div>
+                            {% for row in [
+                                {name: 'Site web', status: 'success', label: 'Opérationnel', down: []},
+                                {name: 'API publique', status: 'success', label: 'Opérationnel', down: [61]},
+                                {name: 'Paiement', status: 'warning', label: 'Dégradé', down: [88, 89]},
+                            ] %}
+                                <div class="mb-3">
+                                    <div class="d-flex justify-content-between small mb-1">
+                                        <span class="fw-semibold">{{ row.name }}</span>
+                                        <span class="text-{{ row.status }}">{{ row.label }}</span>
+                                    </div>
+                                    <div class="uptime-bars">
+                                        {% for day in 0..89 %}
+                                            <span class="bg-{{ day in row.down ? (row.status == 'success' ? 'danger' : 'warning') : 'success' }}"></span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            <div class="d-flex justify-content-between small text-secondary">
+                                <span>Il y a 90 jours</span><span>Aujourd'hui</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
-    <section class="row g-4 pb-5">
-        {% for feature in [
-            {icon: 'bi-broadcast', title: 'Monitoring automatique', text: 'Vérification HTTP périodique : code de réponse et temps de réponse.'},
-            {icon: 'bi-exclamation-octagon', title: 'Détection des pannes', text: 'Incidents ouverts et résolus automatiquement, sans faux positifs.'},
-            {icon: 'bi-globe2', title: 'Page de statut publique', text: 'Informez vos utilisateurs en temps réel, avec l\'historique de disponibilité.'},
-            {icon: 'bi-code-slash', title: 'API REST', text: 'Toutes les fonctionnalités accessibles par API, documentée en OpenAPI.'},
-        ] %}
-            <div class="col-md-6 col-lg-3">
-                <div class="card h-100 p-3">
-                    <i class="bi {{ feature.icon }} fs-2 text-success"></i>
-                    <h2 class="h5 mt-2">{{ feature.title }}</h2>
-                    <p class="text-secondary mb-0">{{ feature.text }}</p>
+    {# ───────────── Plateforme (onglets) ───────────── #}
+    <section class="py-5 bg-white border-top border-bottom">
+        <div class="container py-lg-4">
+            <div class="text-center mx-auto mb-5" style="max-width: 720px">
+                <p class="text-success fw-semibold text-uppercase small mb-2">Une seule plateforme</p>
+                <h2 class="display-6 fw-bold">De la vérification à la communication, sans outil en plus</h2>
+                <p class="text-secondary">
+                    Monitoring, détection, gestion d'incidents et page publique partagent les mêmes données :
+                    ce que vos sondes mesurent est exactement ce que vos utilisateurs voient.
+                </p>
+            </div>
+
+            {% set modules = [
+                {
+                    id: 'monitoring', icon: 'bi-broadcast', tab: 'Monitoring',
+                    kicker: 'Vérifier en continu', title: 'Monitoring HTTP automatique',
+                    text: 'Chaque service est interrogé à intervalle régulier. Kabivox enregistre le code HTTP, le temps de réponse et l\'erreur éventuelle de chaque vérification.',
+                    points: ['Intervalles de 1 minute à 1 heure', 'Méthode GET ou HEAD, code attendu configurable', 'Seuil « dégradé » en millisecondes', 'Pause et reprise en un clic'],
+                },
+                {
+                    id: 'detection', icon: 'bi-shield-check', tab: 'Détection',
+                    kicker: 'Alerter juste', title: 'Détection des pannes sans faux positifs',
+                    text: 'Un échec isolé ne suffit pas : un service n\'est déclaré indisponible qu\'après plusieurs échecs consécutifs. Un réseau capricieux ne réveille personne pour rien.',
+                    points: ['Seuil d\'échecs consécutifs par service', 'Statuts : opérationnel, dégradé, indisponible', 'Retour à la normale détecté automatiquement'],
+                },
+                {
+                    id: 'incidents', icon: 'bi-exclamation-octagon', tab: 'Incidents',
+                    kicker: 'Communiquer clairement', title: 'Incidents ouverts et résolus pour vous',
+                    text: 'Une panne détectée ouvre un incident ; le retour du service le résout. Vous pouvez aussi déclarer un incident à la main et publier des mises à jour successives.',
+                    points: ['Timeline : investigation → identifié → surveillance → résolu', 'Impact mineur, majeur ou critique', 'Un incident peut concerner plusieurs services'],
+                },
+                {
+                    id: 'page', icon: 'bi-globe2', tab: 'Page de statut',
+                    kicker: 'Rassurer vos utilisateurs', title: 'Une page de statut publique, prête à partager',
+                    text: 'Chaque projet dispose de sa propre page publique : statut global, état de chaque service, barres de disponibilité sur 90 jours et historique des incidents.',
+                    points: ['Adresse publique unique par projet', 'Les URL surveillées ne sont jamais exposées', 'Historique détaillé de chaque incident'],
+                },
+                {
+                    id: 'stats', icon: 'bi-graph-up', tab: 'Statistiques',
+                    kicker: 'Mesurer la fiabilité', title: 'Disponibilité et performances, chiffrées',
+                    text: 'Suivez la disponibilité de chaque service sur plusieurs périodes, ainsi que les temps de réponse moyens et au 95e centile depuis votre dashboard.',
+                    points: ['Uptime sur 24 h, 7 j, 30 j et 90 j', 'Temps de réponse moyen et p95', 'Vue d\'ensemble de tous vos projets'],
+                },
+            ] %}
+
+            <ul class="nav nav-pills justify-content-center flex-wrap gap-2 mb-4 module-tabs" role="tablist">
+                {% for m in modules %}
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link{{ loop.first ? ' active' }}" id="tab-{{ m.id }}" data-bs-toggle="pill"
+                                data-bs-target="#pane-{{ m.id }}" type="button" role="tab"
+                                aria-controls="pane-{{ m.id }}" aria-selected="{{ loop.first ? 'true' : 'false' }}">
+                            <i class="bi {{ m.icon }}"></i> {{ m.tab }}
+                        </button>
+                    </li>
+                {% endfor %}
+            </ul>
+
+            <div class="tab-content">
+                {% for m in modules %}
+                    <div class="tab-pane fade{{ loop.first ? ' show active' }}" id="pane-{{ m.id }}" role="tabpanel" aria-labelledby="tab-{{ m.id }}" tabindex="0">
+                        <div class="module-card row g-0 align-items-center">
+                            <div class="col-lg-6 p-4 p-lg-5">
+                                <p class="text-success fw-semibold small mb-1">{{ m.kicker }}</p>
+                                <h3 class="h2 fw-bold mb-3">{{ m.title }}</h3>
+                                <p class="text-secondary">{{ m.text }}</p>
+                                <ul class="list-unstyled mb-0">
+                                    {% for point in m.points %}
+                                        <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>{{ point }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <div class="col-lg-6 p-4 p-lg-5 module-visual d-flex align-items-center justify-content-center">
+                                <i class="bi {{ m.icon }}"></i>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    {# ───────────── Chiffres clés (faits produit) ───────────── #}
+    <section class="py-5 landing-dark text-white">
+        <div class="container py-lg-4">
+            <div class="text-center mx-auto mb-5" style="max-width: 680px">
+                <h2 class="display-6 fw-bold">Conçu pour la fiabilité</h2>
+                <p class="text-white-50 mb-0">Des règles simples et explicites, pensées pour détecter les vraies pannes.</p>
+            </div>
+            <div class="row g-4 text-center">
+                {% for fact in [
+                    {value: '60 s', label: 'Intervalle minimum entre deux vérifications'},
+                    {value: '3', label: 'Échecs consécutifs par défaut avant de déclarer une panne'},
+                    {value: '90 j', label: 'D\'historique de disponibilité sur la page publique'},
+                    {value: 'p95', label: 'Temps de réponse suivi au 95e centile'},
+                ] %}
+                    <div class="col-6 col-lg-3">
+                        <div class="fact-value">{{ fact.value }}</div>
+                        <div class="text-white-50 small mt-2">{{ fact.label }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    {# ───────────── Comment ça marche ───────────── #}
+    <section class="py-5" id="fonctionnement">
+        <div class="container py-lg-4">
+            <div class="text-center mx-auto mb-5" style="max-width: 680px">
+                <p class="text-success fw-semibold text-uppercase small mb-2">Comment ça marche</p>
+                <h2 class="display-6 fw-bold">En ligne en trois étapes</h2>
+            </div>
+            <div class="row g-4">
+                {% for step in [
+                    {n: 1, icon: 'bi-folder-plus', title: 'Créez un projet', text: 'Un projet correspond à une page de statut, avec sa propre adresse publique.'},
+                    {n: 2, icon: 'bi-plus-circle', title: 'Ajoutez vos services', text: 'Renseignez l\'URL, le code attendu et l\'intervalle : la surveillance démarre aussitôt.'},
+                    {n: 3, icon: 'bi-share', title: 'Partagez votre page', text: 'Diffusez le lien à vos utilisateurs. Kabivox s\'occupe du reste, incidents compris.'},
+                ] %}
+                    <div class="col-md-4">
+                        <div class="card h-100 p-4 step-card">
+                            <span class="step-number">{{ step.n }}</span>
+                            <i class="bi {{ step.icon }} fs-2 text-success mb-3"></i>
+                            <h3 class="h5 fw-bold">{{ step.title }}</h3>
+                            <p class="text-secondary mb-0">{{ step.text }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    {# ───────────── API (à venir) ───────────── #}
+    <section class="py-5 bg-white border-top border-bottom">
+        <div class="container py-lg-4">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-5">
+                    <span class="badge text-bg-light border mb-3">Bientôt disponible</span>
+                    <h2 class="display-6 fw-bold">Pensé pour les développeurs</h2>
+                    <p class="text-secondary">
+                        Une API REST documentée en OpenAPI permettra de lire le statut de vos pages
+                        et de piloter projets, services et incidents depuis vos propres outils.
+                    </p>
+                </div>
+                <div class="col-lg-7">
+                    <div class="code-window">
+                        <div class="preview-chrome"><span></span><span></span><span></span></div>
+<pre class="mb-0 p-4"><code><span class="c-muted"># Lire le statut d'une page publique</span>
+<span class="c-green">$</span> curl https://kabivox.example/api/public/status/acme-cloud
+
+{
+  <span class="c-key">"status"</span>: <span class="c-str">"operational"</span>,
+  <span class="c-key">"services"</span>: [
+    { <span class="c-key">"name"</span>: <span class="c-str">"API publique"</span>, <span class="c-key">"status"</span>: <span class="c-str">"operational"</span> }
+  ]
+}</code></pre>
+                    </div>
                 </div>
             </div>
-        {% endfor %}
+        </div>
     </section>
+
+    {# ───────────── Tarifs ───────────── #}
+    <section class="py-5" id="tarifs">
+        <div class="container py-lg-4">
+            <div class="text-center mx-auto mb-5" style="max-width: 680px">
+                <p class="text-success fw-semibold text-uppercase small mb-2">Tarifs</p>
+                <h2 class="display-6 fw-bold">Simple, en euros, sans surprise</h2>
+                <p class="text-secondary mb-0">
+                    Kabivox est gratuit pendant la bêta. Les offres payantes arriveront avec les notifications
+                    et les domaines personnalisés.
+                </p>
+            </div>
+
+            {% set plans = [
+                {
+                    name: 'Bêta', price: '0 €', period: 'pendant la bêta', featured: true, available: true,
+                    text: 'Toutes les fonctionnalités actuelles, sans carte bancaire.',
+                    features: [
+                        'Jusqu\'à ' ~ max_projects ~ ' pages de statut',
+                        'Jusqu\'à ' ~ max_services ~ ' services par page',
+                        'Vérifications toutes les minutes',
+                        'Incidents automatiques et manuels',
+                        'Historique de disponibilité sur 90 jours',
+                    ],
+                },
+                {
+                    name: 'Pro', price: '9 €', period: 'HT / mois, prix prévu', featured: false, available: false,
+                    text: 'Pour une PME qui veut prévenir ses clients.',
+                    features: ['Alertes par e-mail, Slack et webhook', 'Domaine personnalisé (status.votre-site.fr)', 'Logo et couleurs de votre marque', 'Abonnement des visiteurs aux incidents'],
+                },
+                {
+                    name: 'Agence', price: '29 €', period: 'HT / mois, prix prévu', featured: false, available: false,
+                    text: 'Pour les agences web qui gèrent plusieurs clients.',
+                    features: ['Une page de statut par client', 'Membres d\'équipe', 'Pages sans la marque Kabivox', 'Maintenances planifiées'],
+                },
+            ] %}
+
+            <div class="row g-4 justify-content-center">
+                {% for plan in plans %}
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card h-100 p-4 plan-card{{ plan.featured ? ' is-featured' }}">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h3 class="h5 fw-bold mb-0">{{ plan.name }}</h3>
+                                {% if plan.available %}
+                                    <span class="badge text-bg-success">Disponible</span>
+                                {% else %}
+                                    <span class="badge text-bg-light border">Bientôt</span>
+                                {% endif %}
+                            </div>
+                            <p class="text-secondary small">{{ plan.text }}</p>
+                            <div class="mb-3">
+                                <span class="plan-price">{{ plan.price }}</span>
+                                <span class="text-secondary small">{{ plan.period }}</span>
+                            </div>
+                            <ul class="list-unstyled small flex-grow-1">
+                                {% for feature in plan.features %}
+                                    <li class="mb-2"><i class="bi bi-check2 text-success me-2"></i>{{ feature }}</li>
+                                {% endfor %}
+                            </ul>
+                            {% if plan.available %}
+                                <a href="{{ app.user ? path('app_dashboard') : path('app_register') }}" class="btn btn-success w-100">
+                                    {{ app.user ? 'Accéder au dashboard' : 'Commencer gratuitement' }}
+                                </a>
+                            {% else %}
+                                <button type="button" class="btn btn-outline-secondary w-100" disabled>Bientôt disponible</button>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    {# ───────────── FAQ ───────────── #}
+    <section class="py-5 bg-white border-top border-bottom" id="faq">
+        <div class="container py-lg-4" style="max-width: 820px">
+            <div class="text-center mb-5">
+                <p class="text-success fw-semibold text-uppercase small mb-2">Questions fréquentes</p>
+                <h2 class="display-6 fw-bold">Vous vous demandez peut-être…</h2>
+            </div>
+            <div class="accordion" id="faqAccordion">
+                {% for item in [
+                    {q: 'Qu\'est-ce qu\'une page de statut ?', a: 'Une page publique qui indique en temps réel si vos services fonctionnent, avec l\'historique des incidents. Vos clients savent immédiatement si un problème vient de chez vous, et votre support reçoit moins de messages pendant une panne.'},
+                    {q: 'Comment Kabivox évite-t-il les fausses alertes ?', a: 'Un service n\'est déclaré indisponible qu\'après plusieurs échecs consécutifs (3 par défaut, réglable par service). Il ne repasse « opérationnel » qu\'après plusieurs vérifications réussies d\'affilée.'},
+                    {q: 'Mes URL surveillées sont-elles visibles publiquement ?', a: 'Non. La page de statut n\'affiche que le nom que vous donnez à chaque service. Les adresses surveillées restent privées.'},
+                    {q: 'Faut-il installer quelque chose sur mon serveur ?', a: 'Non. Kabivox vérifie vos services depuis l\'extérieur, comme le ferait un visiteur. Il suffit de renseigner l\'URL.'},
+                    {q: 'Que se passe-t-il à la fin de la bêta ?', a: 'Vous serez prévenu à l\'avance. Une offre gratuite sera conservée, et rien ne vous sera facturé sans votre accord.'},
+                ] %}
+                    <div class="accordion-item">
+                        <h3 class="accordion-header">
+                            <button class="accordion-button{{ loop.first ? '' : ' collapsed' }}" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#faq-{{ loop.index }}" aria-expanded="{{ loop.first ? 'true' : 'false' }}" aria-controls="faq-{{ loop.index }}">
+                                {{ item.q }}
+                            </button>
+                        </h3>
+                        <div id="faq-{{ loop.index }}" class="accordion-collapse collapse{{ loop.first ? ' show' }}" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-secondary">{{ item.a }}</div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    {# ───────────── Appel à l'action ───────────── #}
+    <section class="py-5">
+        <div class="container py-lg-4">
+            <div class="cta-band text-center p-5">
+                <h2 class="display-6 fw-bold mb-3">Votre page de statut en quelques minutes</h2>
+                <p class="text-secondary mb-4">Gratuit pendant la bêta, sans carte bancaire.</p>
+                {% if app.user %}
+                    <a href="{{ path('app_dashboard') }}" class="btn btn-success btn-lg">Accéder au dashboard</a>
+                {% else %}
+                    <a href="{{ path('app_register') }}" class="btn btn-success btn-lg">Créer un compte gratuit</a>
+                    <a href="{{ path('app_login') }}" class="btn btn-link btn-lg text-dark">J'ai déjà un compte</a>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+</main>
 {% endblock %}
